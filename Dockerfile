@@ -13,7 +13,9 @@ ENV VIPS_VERSION=$VIPS_VERSION
 RUN yum install -y \
   gtk-doc \
   gobject-introspection \
-  gobject-introspection-devel
+  gobject-introspection-devel \
+  poppler-glib \
+  poppler-glib-devel
 
 # Clone repo and checkout version tag.
 #
@@ -27,15 +29,20 @@ RUN cd ./libvips && \
   CC=clang CXX=clang++ \
   ./autogen.sh \
   --prefix=${INSTALLDIR} \
+  --with-poppler-includes=/usr/include \
+  --with-poppler-libraries=/usr/lib64 \
   --disable-static && \
   make install && \
   echo /opt/lib > /etc/ld.so.conf.d/libvips.conf && \
+  echo /usr/lib64 > /etc/ld.so.conf.d/libvips.conf && \
   ldconfig
 
 # Copy only needed so files to new share/lib.
 #
 RUN mkdir -p share/lib && \
-  cp -a $INSTALLDIR/lib/libvips.so* $WORKDIR/share/lib/
+  cp -a $INSTALLDIR/lib/libvips.so* $WORKDIR/share/lib/ && \
+  cp -a /usr/lib64/libpoppler*.so* $WORKDIR/share/lib/ && \ 
+  cp -a /usr/lib64/libopenjpeg*.so* $WORKDIR/share/lib/
 
 # Create sym links for ruby-ffi gem's `glib_libname` and `gobject_libname` to work.
 RUN cd ./share/lib/ && \
