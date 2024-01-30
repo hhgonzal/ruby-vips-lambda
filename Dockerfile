@@ -2,7 +2,7 @@ FROM lambci/lambda:build-ruby2.7
 
 WORKDIR /build
 
-ARG VIPS_VERSION=8.15.1
+ARG VIPS_VERSION=8.12.2
 
 ENV WORKDIR="/build"
 ENV INSTALLDIR="/opt"
@@ -19,9 +19,11 @@ RUN yum install -y \
 
 # Clone repo and checkout version tag.
 #
-RUN git clone git://github.com/libvips/libvips.git && \
+RUN git clone https://github.com/libvips/libvips.git && \
   cd libvips && \
-  git checkout "v${VIPS_VERSION}"
+  git checkout "v${VIPS_VERSION}" -b "v${VIPS_VERSION}" && \
+  pwd && \
+  ls -al
 
 # Compile from source.
 #

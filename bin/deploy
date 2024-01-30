@@ -5,6 +5,6 @@ set -e
 ./bin/build
 
 aws lambda publish-layer-version \
-  --layer-name "rubyvips-8151" \
-  --description "Libvips for Ruby FFI." \
+  --layer-name "rubyvips-8_12_2" \
+  --description "Libvips 8.12.2 for Ruby 2.7" \
   --zip-file "fileb://$(pwd)/share/libvips.zip"
