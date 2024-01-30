@@ -1,8 +1,8 @@
-FROM lambci/lambda:build-ruby2.5
+FROM lambci/lambda:build-ruby2.7
 
 WORKDIR /build
 
-ARG VIPS_VERSION=8.7.4
+ARG VIPS_VERSION=8.15.1
 
 ENV WORKDIR="/build"
 ENV INSTALLDIR="/opt"
