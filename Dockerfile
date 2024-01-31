@@ -15,7 +15,12 @@ RUN yum install -y \
   gobject-introspection \
   gobject-introspection-devel \
   poppler-glib \
-  poppler-glib-devel
+  poppler-glib-devel \
+  libexif-devel \
+  libjpeg-turbo \
+  libjpeg-turbo-devel \
+#  libwebp-devel \
+  libtiff-devel
 
 # Clone repo and checkout version tag.
 #
@@ -33,6 +38,8 @@ RUN cd ./libvips && \
   --prefix=${INSTALLDIR} \
   --with-poppler-includes=/usr/include \
   --with-poppler-libraries=/usr/lib64 \
+#  --with-jpeg-includes=/usr/include \
+#  --with-jpeg-libraries=/usr/lib64 \
   --disable-static && \
   make install && \
   echo /opt/lib > /etc/ld.so.conf.d/libvips.conf && \
@@ -43,8 +50,13 @@ RUN cd ./libvips && \
 #
 RUN mkdir -p share/lib && \
   cp -a $INSTALLDIR/lib/libvips.so* $WORKDIR/share/lib/ && \
+#  cp -a /usr/lib64/*.so* $WORKDIR/share/lib/  
   cp -a /usr/lib64/libpoppler*.so* $WORKDIR/share/lib/ && \ 
+  cp -a /usr/lib64/libjpeg*.so* $WORKDIR/share/lib/ && \
+#  cp -a /usr/lib64/libwebp*.so* $WORKDIR/share/lib/ && \
+  cp -a /usr/lib64/libexif*.so* $WORKDIR/share/lib/ && \  
   cp -a /usr/lib64/libopenjpeg*.so* $WORKDIR/share/lib/
+
 
 # Create sym links for ruby-ffi gem's `glib_libname` and `gobject_libname` to work.
 RUN cd ./share/lib/ && \
